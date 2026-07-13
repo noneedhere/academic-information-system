@@ -10,6 +10,7 @@ use App\Http\Controllers\BillController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\Student\AttendanceController as StudentAttendanceController;
 use Illuminate\Support\Facades\Route;
 
 // =========================================================================
@@ -57,6 +58,7 @@ Route::middleware('auth')->group(function () {
     // Student Routes
     // =====================================================================
     Route::middleware('role:student')->group(function () {
+        Route::get('/my-attendance', [StudentAttendanceController::class, 'index'])->name('student.attendance.index');
         Route::get('/bills', [BillController::class, 'index'])->name('bills.index');
     });
 
