@@ -24,6 +24,8 @@ class BillController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Bill::class);
+
         $query = Bill::with('student');
 
         // Filter by status
@@ -58,6 +60,8 @@ class BillController extends Controller
      */
     public function create(): View
     {
+        $this->authorize('create', Bill::class);
+
         $students = User::whereHas('role', fn ($q) => $q->where('slug', Role::STUDENT))
             ->orderBy('name')
             ->get();
@@ -70,6 +74,8 @@ class BillController extends Controller
      */
     public function store(StoreBillRequest $request): RedirectResponse
     {
+        $this->authorize('create', Bill::class);
+
         Bill::create($request->validated());
 
         return redirect()->route('admin.bills.index')
@@ -81,6 +87,8 @@ class BillController extends Controller
      */
     public function edit(Bill $bill): View
     {
+        $this->authorize('update', $bill);
+
         $students = User::whereHas('role', fn ($q) => $q->where('slug', Role::STUDENT))
             ->orderBy('name')
             ->get();
@@ -93,6 +101,8 @@ class BillController extends Controller
      */
     public function update(UpdateBillRequest $request, Bill $bill): RedirectResponse
     {
+        $this->authorize('update', $bill);
+
         $bill->update($request->validated());
 
         return redirect()->route('admin.bills.index')
@@ -104,6 +114,8 @@ class BillController extends Controller
      */
     public function destroy(Bill $bill): RedirectResponse
     {
+        $this->authorize('delete', $bill);
+
         $bill->delete();
 
         return redirect()->route('admin.bills.index')
@@ -115,6 +127,8 @@ class BillController extends Controller
      */
     public function toggleStatus(Bill $bill): RedirectResponse
     {
+        $this->authorize('toggleStatus', $bill);
+
         $this->billService->toggleStatus($bill);
 
         $newStatus = $bill->fresh()->status->label();
