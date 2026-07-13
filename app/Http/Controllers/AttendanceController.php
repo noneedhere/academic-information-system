@@ -23,6 +23,8 @@ class AttendanceController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Attendance::class);
+
         $user = Auth::user();
 
         $query = Attendance::where('teacher_id', $user->id)
@@ -61,6 +63,8 @@ class AttendanceController extends Controller
      */
     public function create(): View
     {
+        $this->authorize('create', Attendance::class);
+
         $students = User::whereHas('role', fn ($q) => $q->where('slug', Role::STUDENT))
             ->orderBy('name')
             ->get();
@@ -73,6 +77,8 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request): RedirectResponse
     {
+        $this->authorize('create', Attendance::class);
+
         $this->attendanceService->storeAttendance(
             $request->validated('attendances'),
             Auth::id(),

@@ -20,6 +20,8 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', User::class);
+
         $query = User::with('role');
 
         // Filter by role
@@ -51,6 +53,8 @@ class UserController extends Controller
      */
     public function create(): View
     {
+        $this->authorize('create', User::class);
+
         $roles = Role::all();
 
         return view('admin.users.create', compact('roles'));
@@ -61,6 +65,8 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
+        $this->authorize('create', User::class);
+
         User::create([
             'role_id'  => $request->validated('role_id'),
             'name'     => $request->validated('name'),
@@ -80,6 +86,8 @@ class UserController extends Controller
      */
     public function edit(User $user): View
     {
+        $this->authorize('update', $user);
+
         $roles = Role::all();
 
         return view('admin.users.edit', compact('user', 'roles'));
@@ -90,6 +98,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
+        $this->authorize('update', $user);
+
         $data = [
             'role_id'  => $request->validated('role_id'),
             'name'     => $request->validated('name'),
@@ -115,6 +125,8 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        $this->authorize('delete', $user);
+
         // Prevent self-deletion
         if ($user->id === auth()->id()) {
             return back()->with('error', 'You cannot delete your own account.');
