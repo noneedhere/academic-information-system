@@ -16,6 +16,8 @@ class AttendanceController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Attendance::class);
+
         $query = Attendance::with(['student', 'teacher']);
 
         // Filter by date range
