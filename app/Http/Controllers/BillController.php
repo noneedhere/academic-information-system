@@ -14,6 +14,8 @@ class BillController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Bill::class);
+
         $user = Auth::user();
 
         $query = Bill::where('student_id', $user->id);

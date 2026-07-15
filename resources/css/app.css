@@ -53,6 +53,9 @@
 
 /* ============================================================
    Component styles
+   NOTE: Tailwind v4 does NOT allow @apply of custom classes
+   defined in the same @layer. All base class references are
+   inlined to avoid "unknown utility class" errors.
    ============================================================ */
 @layer components {
     /* --- Layout --- */
@@ -79,8 +82,10 @@
                bg-gradient-to-br from-white to-surface-50;
     }
 
+    /* stat-card = card styles + extras (inlined, no @apply card) */
     .stat-card {
-        @apply card p-5 flex items-start gap-4 hover:shadow-md transition-shadow duration-200;
+        @apply bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden
+               p-5 flex items-start gap-4 hover:shadow-md transition-shadow duration-200;
     }
 
     .stat-icon {
@@ -88,34 +93,51 @@
     }
 
     /* --- Buttons --- */
+    /* Base .btn — standalone */
     .btn {
         @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
                transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
                disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
     }
 
+    /* btn-primary = btn styles + colors (inlined) */
     .btn-primary {
-        @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
+               transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+               bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500
                shadow-sm hover:shadow-md active:shadow-none;
     }
 
     .btn-secondary {
-        @apply btn bg-white text-gray-700 border border-gray-300 hover:bg-gray-50
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
+               transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+               bg-white text-gray-700 border border-gray-300 hover:bg-gray-50
                focus:ring-primary-500;
     }
 
     .btn-danger {
-        @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
+               transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+               bg-red-600 text-white hover:bg-red-700 focus:ring-red-500
                shadow-sm hover:shadow-md;
     }
 
     .btn-success {
-        @apply btn bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
+               transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+               bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500
                shadow-sm hover:shadow-md;
     }
 
     .btn-ghost {
-        @apply btn text-gray-600 hover:bg-gray-100 focus:ring-primary-500;
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
+               transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+               text-gray-600 hover:bg-gray-100 focus:ring-primary-500;
     }
 
     .btn-sm {
@@ -133,8 +155,12 @@
                focus:outline-none transition-all duration-200 bg-white;
     }
 
+    /* form-select = form-input styles + dropdown arrow (inlined) */
     .form-select {
-        @apply form-input appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M6%208L1%203h10z%22%2F%3E%3C%2Fsvg%3E')]
+        @apply w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900
+               placeholder:text-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
+               focus:outline-none transition-all duration-200 bg-white
+               appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M6%208L1%203h10z%22%2F%3E%3C%2Fsvg%3E')]
                bg-no-repeat bg-[right_0.75rem_center] pr-10;
     }
 
@@ -151,28 +177,34 @@
     }
 
     /* --- Badges --- */
+    /* badge-* = badge base styles + color (inlined) */
     .badge {
         @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
     }
 
     .badge-emerald {
-        @apply badge bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+               bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20;
     }
 
     .badge-amber {
-        @apply badge bg-amber-50 text-amber-700 ring-1 ring-amber-600/20;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+               bg-amber-50 text-amber-700 ring-1 ring-amber-600/20;
     }
 
     .badge-sky {
-        @apply badge bg-sky-50 text-sky-700 ring-1 ring-sky-600/20;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+               bg-sky-50 text-sky-700 ring-1 ring-sky-600/20;
     }
 
     .badge-red {
-        @apply badge bg-red-50 text-red-700 ring-1 ring-red-600/20;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+               bg-red-50 text-red-700 ring-1 ring-red-600/20;
     }
 
     .badge-primary {
-        @apply badge bg-primary-50 text-primary-700 ring-1 ring-primary-600/20;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+               bg-primary-50 text-primary-700 ring-1 ring-primary-600/20;
     }
 
     /* --- Tables --- */
@@ -197,24 +229,29 @@
     }
 
     /* --- Alerts --- */
+    /* alert-* = alert base + color (inlined) */
     .alert {
         @apply flex items-start gap-3 px-4 py-3 rounded-lg text-sm border;
     }
 
     .alert-success {
-        @apply alert bg-emerald-50 text-emerald-800 border-emerald-200;
+        @apply flex items-start gap-3 px-4 py-3 rounded-lg text-sm border
+               bg-emerald-50 text-emerald-800 border-emerald-200;
     }
 
     .alert-error {
-        @apply alert bg-red-50 text-red-800 border-red-200;
+        @apply flex items-start gap-3 px-4 py-3 rounded-lg text-sm border
+               bg-red-50 text-red-800 border-red-200;
     }
 
     .alert-warning {
-        @apply alert bg-amber-50 text-amber-800 border-amber-200;
+        @apply flex items-start gap-3 px-4 py-3 rounded-lg text-sm border
+               bg-amber-50 text-amber-800 border-amber-200;
     }
 
     .alert-info {
-        @apply alert bg-sky-50 text-sky-800 border-sky-200;
+        @apply flex items-start gap-3 px-4 py-3 rounded-lg text-sm border
+               bg-sky-50 text-sky-800 border-sky-200;
     }
 
     /* --- Sidebar nav --- */
@@ -223,8 +260,11 @@
                text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-200;
     }
 
+    /* nav-link-active = nav-link styles + active colors (inlined) */
     .nav-link-active {
-        @apply nav-link bg-primary-600/30 text-white;
+        @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+               text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-200
+               bg-primary-600/30 text-white;
     }
 
     .nav-section-title {
