@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateBillRequest extends FormRequest
@@ -22,7 +23,12 @@ class UpdateBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id'  => ['required', 'exists:users,id'],
+            'student_id'  => ['required', 'exists:users,id', function ($attribute, $value, $fail) {
+                $user = User::find($value);
+                if (!$user || !$user->isStudent()) {
+                    $fail('Bills can only be assigned to student accounts.');
+                }
+            }],
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'amount'      => ['required', 'numeric', 'min:0', 'max:999999999999.99'],
