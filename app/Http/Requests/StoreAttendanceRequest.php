@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAttendanceRequest extends FormRequest
@@ -24,7 +25,12 @@ class StoreAttendanceRequest extends FormRequest
         return [
             'date'                    => ['required', 'date', 'date_format:Y-m-d', 'before_or_equal:today'],
             'attendances'             => ['required', 'array', 'min:1'],
-            'attendances.*.student_id' => ['required', 'exists:users,id'],
+            'attendances.*.student_id' => ['required', 'exists:users,id', function ($attribute, $value, $fail) {
+                $user = User::find($value);
+                if (!$user || !$user->isStudent()) {
+                    $fail('Attendance can only be recorded for student accounts.');
+                }
+            }],
             'attendances.*.status'    => ['required', 'in:present,sick,permission,absent'],
             'attendances.*.notes'     => ['nullable', 'string', 'max:500'],
         ];
