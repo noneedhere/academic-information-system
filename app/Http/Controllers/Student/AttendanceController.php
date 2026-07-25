@@ -18,6 +18,12 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
+        $request->validate([
+            'date_from' => ['nullable', 'date', 'date_format:Y-m-d'],
+            'date_to'   => ['nullable', 'date', 'date_format:Y-m-d'],
+            'status'    => ['nullable', 'in:present,sick,permission,absent'],
+        ]);
+
         $query = Attendance::where('student_id', $user->id)
             ->with('teacher');
 

@@ -25,6 +25,13 @@ class AttendanceController extends Controller
     {
         $this->authorize('viewAny', Attendance::class);
 
+        $request->validate([
+            'date_from' => ['nullable', 'date', 'date_format:Y-m-d'],
+            'date_to'   => ['nullable', 'date', 'date_format:Y-m-d'],
+            'status'    => ['nullable', 'in:present,sick,permission,absent'],
+            'search'    => ['nullable', 'string', 'max:100'],
+        ]);
+
         $user = Auth::user();
 
         $query = Attendance::where('teacher_id', $user->id)

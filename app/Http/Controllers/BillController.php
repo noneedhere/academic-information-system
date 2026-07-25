@@ -16,6 +16,11 @@ class BillController extends Controller
     {
         $this->authorize('viewAny', Bill::class);
 
+        $request->validate([
+            'status' => ['nullable', 'in:paid,unpaid'],
+            'search' => ['nullable', 'string', 'max:100'],
+        ]);
+
         $user = Auth::user();
 
         $query = Bill::where('student_id', $user->id);
