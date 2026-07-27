@@ -35,7 +35,7 @@
             {{-- Card --}}
             <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 ring-1 ring-white/20">
                 {{ $slot }}
-            </div>
+            </div>  
 
             {{-- Footer --}}
             <p class="text-center text-xs text-white/40 mt-6">
