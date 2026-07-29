@@ -16,6 +16,8 @@ class AttendanceController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Attendance::class);
+
         $user = Auth::user();
 
         $request->validate([
