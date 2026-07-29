@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [AttendanceController::class, 'index'])->name('index');
         Route::get('/create', [AttendanceController::class, 'create'])->name('create');
         Route::post('/', [AttendanceController::class, 'store'])->name('store');
+        Route::get('/{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
+        Route::put('/{attendance}', [AttendanceController::class, 'update'])->name('update');
     });
 
     // =====================================================================

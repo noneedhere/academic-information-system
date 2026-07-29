@@ -9,11 +9,11 @@ class AttendancePolicy
 {
     /**
      * Determine whether the user can view any attendance records.
-     * Teachers see their own, Head Admin sees all.
+     * Teachers see their own, Head Admin sees all, Students see own.
      */
     public function viewAny(User $user): bool
     {
-        return $user->isTeacher() || $user->isAdmin();
+        return $user->isTeacher() || $user->isAdmin() || $user->isStudent();
     }
 
     /**

@@ -47,13 +47,13 @@
             </button>
         </form>
 
-        {{-- Register link --}}
+        {{-- Register link
         <p class="text-center text-sm text-gray-500">
             Don't have an account?
             <a href="{{ route('register') }}"
                 class="font-semibold text-primary-600 hover:text-primary-500 transition-colors">
                 Register here
             </a>
-        </p>
+        </p> --}}
     </div>
 </x-layouts.guest>

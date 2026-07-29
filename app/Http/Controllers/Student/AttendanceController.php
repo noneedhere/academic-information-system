@@ -3,19 +3,25 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Enums\AttendanceStatus;
 use App\Models\Attendance;
+use App\Services\AttendanceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AttendanceController extends Controller
 {
+    public function __construct(
+        private AttendanceService $attendanceService,
+    ) {}
+
     /**
      * Display the student's own attendance records with filters.
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Attendance::class);
+
         $user = Auth::user();
 
         $request->validate([
@@ -45,24 +51,12 @@ class AttendanceController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        // Summary stats
-        $totalRecords = Attendance::where('student_id', $user->id)->count();
-        $presentCount = Attendance::where('student_id', $user->id)
-            ->where('status', AttendanceStatus::Present)
-            ->count();
-        $absentCount = Attendance::where('student_id', $user->id)
-            ->where('status', AttendanceStatus::Absent)
-            ->count();
-        $attendancePercentage = $totalRecords > 0
-            ? round(($presentCount / $totalRecords) * 100, 1)
-            : 0;
+        // Summary stats (delegated to service — single source of truth)
+        $stats = $this->attendanceService->getStudentStats($user->id);
 
-        return view('student.attendance.index', compact(
-            'attendances',
-            'totalRecords',
-            'presentCount',
-            'absentCount',
-            'attendancePercentage',
+        return view('student.attendance.index', array_merge(
+            compact('attendances'),
+            $stats,
         ));
     }
 }

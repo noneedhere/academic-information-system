@@ -132,6 +132,17 @@ class UserController extends Controller
             return back()->with('error', 'You cannot delete your own account.');
         }
 
+        // Check for related records that would violate FK constraints
+        if ($user->attendances()->exists() || $user->recordedAttendances()->exists()) {
+            return back()->with('error',
+                "Cannot delete {$user->name}: they have existing attendance records. Remove their attendance data first.");
+        }
+
+        if ($user->bills()->exists()) {
+            return back()->with('error',
+                "Cannot delete {$user->name}: they have existing bill records. Remove their bills first.");
+        }
+
         $user->delete();
 
         return redirect()->route('admin.users.index')
