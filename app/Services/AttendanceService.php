@@ -65,21 +65,33 @@ class AttendanceService
     }
 
     /**
+     * Get attendance summary stats for a student.
+     *
+     * @return array{totalRecords: int, presentCount: int, absentCount: int, attendancePercentage: float}
+     */
+    public function getStudentStats(int $studentId): array
+    {
+        $totalRecords = Attendance::where('student_id', $studentId)->count();
+        $presentCount = Attendance::where('student_id', $studentId)
+            ->where('status', AttendanceStatus::Present)
+            ->count();
+        $absentCount = Attendance::where('student_id', $studentId)
+            ->where('status', AttendanceStatus::Absent)
+            ->count();
+
+        $attendancePercentage = $totalRecords > 0
+            ? round(($presentCount / $totalRecords) * 100, 1)
+            : 0;
+
+        return compact('totalRecords', 'presentCount', 'absentCount', 'attendancePercentage');
+    }
+
+    /**
      * Calculate attendance percentage for a student.
      * Formula: (present records / total records) × 100, rounded to 1 decimal.
      */
     public function getAttendancePercentage(int $studentId): float
     {
-        $total = Attendance::where('student_id', $studentId)->count();
-
-        if ($total === 0) {
-            return 0;
-        }
-
-        $present = Attendance::where('student_id', $studentId)
-            ->where('status', AttendanceStatus::Present)
-            ->count();
-
-        return round(($present / $total) * 100, 1);
+        return $this->getStudentStats($studentId)['attendancePercentage'];
     }
 }
