@@ -95,4 +95,36 @@ class AttendanceController extends Controller
         return redirect()->route('attendance.index')
             ->with('success', 'Attendance records saved successfully.');
     }
+
+    /**
+     * Show the form for editing an attendance record.
+     * Teachers can only edit their own records.
+     */
+    public function edit(Attendance $attendance): View
+    {
+        $this->authorize('update', $attendance);
+
+        $attendance->load('student');
+
+        return view('attendance.edit', compact('attendance'));
+    }
+
+    /**
+     * Update the specified attendance record.
+     * Only status and notes can be changed (not student or date).
+     */
+    public function update(Request $request, Attendance $attendance): RedirectResponse
+    {
+        $this->authorize('update', $attendance);
+
+        $validated = $request->validate([
+            'status' => ['required', 'in:present,sick,permission,absent'],
+            'notes'  => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $attendance->update($validated);
+
+        return redirect()->route('attendance.index')
+            ->with('success', 'Attendance record updated successfully.');
+    }
 }
